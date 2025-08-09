@@ -13,40 +13,40 @@ flowchart LR
     F[Funcionario]
   end
 
-  U -->|HTTPs| CF[(Amazon CloudFront)]
+  U -->|HTTPS| CF[(Amazon CloudFront)]
   CF --- S3FE[(Amazon S3 - SPA)]
-  CF -->|OIDC| COG[Cognito (ClaveÚnica OIDC)]
+  CF -->|OIDC| COG[Cognito ClaveÚnica]
 
   CF -->|REST| WAF[WAF + Shield]
   WAF --> APIG[API Gateway]
 
-  subgraph Orquestación & Cómputo
+  subgraph Orquestación
     APIG --> SFN[Step Functions]
     APIG --> L0[Lambda create-case]
     L0 --> RDS[(RDS PostgreSQL)]
-    L0 --> SQS[[SQS Queue]]
-    SQS --> L1[Lambda preprocess-image]
-    L1 --> S3DOC[(S3 - Documentos)]
-    L1 --> L2[Lambda run-textract]
+    L0 --> SQS[SQS Queue]
+    SQS --> L1[Lambda preprocess]
+    L1 --> S3DOC[(S3 Documentos)]
+    L1 --> L2[Lambda textract]
     L2 --> TEX[Amazon Textract]
-    L2 --> S3JSON[(S3 - JSON OCR)]
+    L2 --> S3JSON[(S3 JSON OCR)]
     L2 --> RDS
-    L2 --> L3[Lambda normalize-parse]
+    L2 --> L3[Lambda normalize]
     L3 --> RDS
-    L3 --> L4[Lambda rules-engine]
+    L3 --> L4[Lambda rules]
     L4 --> RDS
-    L4 --> SNS[Amazon SNS/SES]
+    L4 --> SNS[SNS/SES]
   end
 
-  subgraph Datos & Auditoría
-    DDB[(DynamoDB Auditoría opcional)]
-    GL[Glacier - Logs inmutables]
+  subgraph Datos
+    DDB[(DynamoDB Audit)]
+    GL[Glacier Logs]
     S3DOC -->|Lifecycle| GL
   end
 
-  subgraph Observabilidad & Seguridad
-    CW[CloudWatch Logs/Métricas/Alarmas]
-    XR[AWS X-Ray]
+  subgraph Observabilidad
+    CW[CloudWatch]
+    XR[X-Ray]
     CT[CloudTrail]
     KMS[KMS CMK]
     SM[Secrets Manager]
@@ -54,7 +54,7 @@ flowchart LR
     BCK[AWS Backup]
   end
 
-  APIG -->|Invocación| CW
+  APIG --> CW
   L0 --> CW
   L1 --> CW
   L2 --> CW
@@ -69,7 +69,7 @@ flowchart LR
   TEX -.KMS.-> KMS
   APIG -.credenciales.-> SM
 
-  F -->|RBAC Cognito| CF
+  F -->|RBAC| CF
   CF --> APIG
 ```
 
@@ -80,26 +80,26 @@ flowchart LR
 ```mermaid
 sequenceDiagram
   autonumber
-  participant User as Usuario (SPA)
+  participant User as Usuario SPA
   participant CF as CloudFront/S3
-  participant COG as Cognito (OIDC ClaveÚnica)
+  participant COG as Cognito OIDC
   participant APIG as API Gateway
   participant L0 as Lambda create-case
-  participant S3 as S3 (docs)
+  participant S3 as S3 docs
   participant SQS as SQS
-  participant L1 as Lambda preprocess-image
-  participant L2 as Lambda run-textract
+  participant L1 as Lambda preprocess
+  participant L2 as Lambda textract
   participant TEX as Amazon Textract
-  participant L3 as Lambda normalize-parse
-  participant L4 as Lambda rules-engine
+  participant L3 as Lambda normalize
+  participant L4 as Lambda rules
   participant RDS as RDS PostgreSQL
   participant SNS as SNS/SES
 
   User->>CF: (1) Acceso SPA
-  CF->>COG: OIDC Login (ClaveÚnica)
+  CF->>COG: OIDC Login ClaveÚnica
   COG-->>User: Token OIDC
-  User->>S3: (2) Upload directo (presigned URL)
-  User->>APIG: (3) create-case (token)
+  User->>S3: (2) Upload directo presigned URL
+  User->>APIG: (3) create-case token
   APIG->>L0: Invoke
   L0->>RDS: Insert expediente
   L0->>SQS: Enqueue mensaje
@@ -114,9 +114,9 @@ sequenceDiagram
   L3->>RDS: Upsert campos normalizados
   L3->>L4: (7) Reglas negocio
   L4->>RDS: Update estado/validación
-  L4->>SNS: (8) Notificación (aprob/rechazo)
+  L4->>SNS: (8) Notificación aprob/rechazo
   SNS-->>User: Email/SMS
-  User->>APIG: (9) Panel funcionario (si aplica)
+  User->>APIG: (9) Panel funcionario si aplica
   APIG->>RDS: Consultas
   APIG-->>User: Datos expediente
   Note over User,APIG: (10) Cierre: acta PDF en S3 y hash en RDS
@@ -201,26 +201,26 @@ erDiagram
 
 ```mermaid
 flowchart TB
-  subgraph Frontend & Identidad
+  subgraph Frontend
     SPA[React SPA en S3]:::fe
     CF[CloudFront]:::fe
-    COG[Cognito (OIDC ClaveÚnica)]:::sec
+    COG[Cognito OIDC]:::sec
   end
-  subgraph Perímetro API
+  subgraph Perimetro
     WAF[WAF + Shield]:::sec
     APIG[API Gateway REST]:::api
   end
-  subgraph Cómputo & Orquestación
+  subgraph Computo
     SFN[Step Functions]:::comp
-    LAMBDAS[ Lambdas (create-case, preprocess, run-textract, normalize, rules, notify) ]:::comp
+    LAMBDAS[Lambdas]:::comp
     SQS[SQS + DLQ]:::comp
   end
   subgraph Datos
-    S3DOC[S3 Buckets (orig/proc/json)]:::data
-    RDS[(RDS PostgreSQL Multi-AZ + RR)]:::data
-    DDB[(DynamoDB Audit opc.)]:::data
+    S3DOC[S3 Buckets]:::data
+    RDS[RDS PostgreSQL]:::data
+    DDB[DynamoDB Audit]:::data
   end
-  subgraph Observabilidad & Gobierno
+  subgraph Observabilidad
     CW[CloudWatch/X-Ray]:::obs
     CT[CloudTrail]:::obs
     CFG[AWS Config]:::gov
@@ -245,13 +245,13 @@ flowchart TB
   RDS---BCK
   CFG---APIG
 
-  classDef fe fill:#f4f9ff,stroke:#6aa3ff,stroke-width:1.2;
-  classDef api fill:#eefaf1,stroke:#58c26a,stroke-width:1.2;
-  classDef comp fill:#fff8e6,stroke:#ffb200,stroke-width:1.2;
-  classDef data fill:#fcf0ff,stroke:#b26bff,stroke-width:1.2;
-  classDef obs fill:#f0f7f7,stroke:#4fb0ae,stroke-width:1.2;
-  classDef sec fill:#fff0f0,stroke:#ff6b6b,stroke-width:1.2;
-  classDef gov fill:#f7f7f7,stroke:#9e9e9e,stroke-width:1.2;
+  classDef fe fill:#f4f9ff,stroke:#6aa3ff,stroke-width:1.2
+  classDef api fill:#eefaf1,stroke:#58c26a,stroke-width:1.2
+  classDef comp fill:#fff8e6,stroke:#ffb200,stroke-width:1.2
+  classDef data fill:#fcf0ff,stroke:#b26bff,stroke-width:1.2
+  classDef obs fill:#f0f7f7,stroke:#4fb0ae,stroke-width:1.2
+  classDef sec fill:#fff0f0,stroke:#ff6b6b,stroke-width:1.2
+  classDef gov fill:#f7f7f7,stroke:#9e9e9e,stroke-width:1.2
 ```
 
 ---
