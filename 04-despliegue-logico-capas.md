@@ -4,26 +4,26 @@ Arquitectura de despliegue organizada por capas funcionales.
 
 ```mermaid
 flowchart TB
-  subgraph Frontend & Identidad
+  subgraph Frontend
     SPA[React SPA en S3]:::fe
     CF[CloudFront]:::fe
-    COG[Cognito (OIDC ClaveÚnica)]:::sec
+    COG[Cognito OIDC]:::sec
   end
-  subgraph Perímetro API
+  subgraph Perimetro
     WAF[WAF + Shield]:::sec
     APIG[API Gateway REST]:::api
   end
-  subgraph Cómputo & Orquestación
+  subgraph Computo
     SFN[Step Functions]:::comp
-    LAMBDAS[ Lambdas (create-case, preprocess, run-textract, normalize, rules, notify) ]:::comp
+    LAMBDAS[Lambdas]:::comp
     SQS[SQS + DLQ]:::comp
   end
   subgraph Datos
-    S3DOC[S3 Buckets (orig/proc/json)]:::data
-    RDS[(RDS PostgreSQL Multi-AZ + RR)]:::data
-    DDB[(DynamoDB Audit opc.)]:::data
+    S3DOC[S3 Buckets]:::data
+    RDS[RDS PostgreSQL]:::data
+    DDB[DynamoDB Audit]:::data
   end
-  subgraph Observabilidad & Gobierno
+  subgraph Observabilidad
     CW[CloudWatch/X-Ray]:::obs
     CT[CloudTrail]:::obs
     CFG[AWS Config]:::gov
@@ -48,11 +48,11 @@ flowchart TB
   RDS---BCK
   CFG---APIG
 
-  classDef fe fill:#f4f9ff,stroke:#6aa3ff,stroke-width:1.2;
-  classDef api fill:#eefaf1,stroke:#58c26a,stroke-width:1.2;
-  classDef comp fill:#fff8e6,stroke:#ffb200,stroke-width:1.2;
-  classDef data fill:#fcf0ff,stroke:#b26bff,stroke-width:1.2;
-  classDef obs fill:#f0f7f7,stroke:#4fb0ae,stroke-width:1.2;
-  classDef sec fill:#fff0f0,stroke:#ff6b6b,stroke-width:1.2;
-  classDef gov fill:#f7f7f7,stroke:#9e9e9e,stroke-width:1.2;
+  classDef fe fill:#f4f9ff,stroke:#6aa3ff,stroke-width:1.2
+  classDef api fill:#eefaf1,stroke:#58c26a,stroke-width:1.2
+  classDef comp fill:#fff8e6,stroke:#ffb200,stroke-width:1.2
+  classDef data fill:#fcf0ff,stroke:#b26bff,stroke-width:1.2
+  classDef obs fill:#f0f7f7,stroke:#4fb0ae,stroke-width:1.2
+  classDef sec fill:#fff0f0,stroke:#ff6b6b,stroke-width:1.2
+  classDef gov fill:#f7f7f7,stroke:#9e9e9e,stroke-width:1.2
 ``` 
