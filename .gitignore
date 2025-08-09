@@ -1,0 +1,19 @@
+# Archivos temporales
+*.tmp
+*.temp
+*~
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de respaldo
+*.bak
+*.backup
+
+# Logs
+*.log
+
+# Archivos de configuración local
+.env
+.env.local 
