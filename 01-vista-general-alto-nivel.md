@@ -9,40 +9,40 @@ flowchart LR
     F[Funcionario]
   end
 
-  U -->|HTTPs| CF[(Amazon CloudFront)]
+  U -->|HTTPS| CF[(Amazon CloudFront)]
   CF --- S3FE[(Amazon S3 - SPA)]
-  CF -->|OIDC| COG[Cognito (ClaveÚnica OIDC)]
+  CF -->|OIDC| COG[Cognito ClaveÚnica]
 
   CF -->|REST| WAF[WAF + Shield]
   WAF --> APIG[API Gateway]
 
-  subgraph Orquestación & Cómputo
+  subgraph Orquestación
     APIG --> SFN[Step Functions]
     APIG --> L0[Lambda create-case]
     L0 --> RDS[(RDS PostgreSQL)]
-    L0 --> SQS[[SQS Queue]]
-    SQS --> L1[Lambda preprocess-image]
-    L1 --> S3DOC[(S3 - Documentos)]
-    L1 --> L2[Lambda run-textract]
+    L0 --> SQS[SQS Queue]
+    SQS --> L1[Lambda preprocess]
+    L1 --> S3DOC[(S3 Documentos)]
+    L1 --> L2[Lambda textract]
     L2 --> TEX[Amazon Textract]
-    L2 --> S3JSON[(S3 - JSON OCR)]
+    L2 --> S3JSON[(S3 JSON OCR)]
     L2 --> RDS
-    L2 --> L3[Lambda normalize-parse]
+    L2 --> L3[Lambda normalize]
     L3 --> RDS
-    L3 --> L4[Lambda rules-engine]
+    L3 --> L4[Lambda rules]
     L4 --> RDS
-    L4 --> SNS[Amazon SNS/SES]
+    L4 --> SNS[SNS/SES]
   end
 
-  subgraph Datos & Auditoría
-    DDB[(DynamoDB Auditoría opcional)]
-    GL[Glacier - Logs inmutables]
+  subgraph Datos
+    DDB[(DynamoDB Audit)]
+    GL[Glacier Logs]
     S3DOC -->|Lifecycle| GL
   end
 
-  subgraph Observabilidad & Seguridad
-    CW[CloudWatch Logs/Métricas/Alarmas]
-    XR[AWS X-Ray]
+  subgraph Observabilidad
+    CW[CloudWatch]
+    XR[X-Ray]
     CT[CloudTrail]
     KMS[KMS CMK]
     SM[Secrets Manager]
@@ -50,7 +50,7 @@ flowchart LR
     BCK[AWS Backup]
   end
 
-  APIG -->|Invocación| CW
+  APIG --> CW
   L0 --> CW
   L1 --> CW
   L2 --> CW
@@ -65,6 +65,6 @@ flowchart LR
   TEX -.KMS.-> KMS
   APIG -.credenciales.-> SM
 
-  F -->|RBAC Cognito| CF
+  F -->|RBAC| CF
   CF --> APIG
 ``` 
