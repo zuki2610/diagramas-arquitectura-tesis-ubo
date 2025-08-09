@@ -4,12 +4,12 @@ Diagrama simplificado de las 6 etapas de la metodología del proyecto.
 
 ```mermaid
 flowchart TD
-  START([Inicio]) --> A1[1. Análisis del Proceso Actual]
-  A1 --> A2[2. Levantamiento de Requerimientos]
-  A2 --> A3[3. Evaluación de Tecnologías OCR]
-  A3 --> A4[4. Diseño Conceptual del Sistema]
-  A4 --> A5[5. Evaluación Técnica e Impacto]
-  A5 --> A6[6. Principios Normativos y Éticos]
+  START([Inicio]) --> A1[Análisis del Proceso]
+  A1 --> A2[Levantamiento de Requerimientos]
+  A2 --> A3[Evaluación de Tecnologías OCR]
+  A3 --> A4[Diseño Conceptual del Sistema]
+  A4 --> A5[Evaluación Técnica e Impacto]
+  A5 --> A6[Principios Normativos y Éticos]
   A6 --> END([Propuesta Final])
 
   %% Estilos optimizados para Word
