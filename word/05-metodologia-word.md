@@ -4,7 +4,7 @@ Diagrama de flujo que ilustra las seis etapas de la metodología mixta: document
 
 ```mermaid
 flowchart TD
-  START([Inicio del Proyecto]) --> A1[1. Análisis del Proceso Actual]
+  START([Inicio del Proyecto]) --> A1[Análisis del Proceso Actual]
   
   A1 --> A1A[Revisión exhaustiva del proceso de visas]
   A1A --> A1B[Identificación de puntos críticos]
@@ -12,7 +12,7 @@ flowchart TD
   A1C --> A1D[Análisis de flujos de validación]
   A1D --> A1E[Estudio de tiempos promedio]
   
-  A1E --> A2[2. Levantamiento de Requerimientos]
+  A1E --> A2[Levantamiento de Requerimientos]
   A2 --> A2A[Requerimientos funcionales]
   A2 --> A2B[Requerimientos no funcionales]
   A2 --> A2C[Precisión OCR]
@@ -20,7 +20,7 @@ flowchart TD
   A2 --> A2E[Accesibilidad]
   A2 --> A2F[Cumplimiento normativo]
   
-  A2F --> A3[3. Evaluación de Tecnologías OCR]
+  A2F --> A3[Evaluación de Tecnologías OCR]
   A3 --> A3A[Análisis comparativo]
   A3A --> A3B[Amazon Textract]
   A3A --> A3C[Tesseract OCR]
@@ -29,7 +29,7 @@ flowchart TD
   A3C --> A3E
   A3D --> A3E
   
-  A3E --> A4[4. Diseño Conceptual del Sistema]
+  A3E --> A4[Diseño Conceptual del Sistema]
   A4 --> A4A[Módulos funcionales]
   A4A --> A4B[Carga de documentos]
   A4A --> A4C[Preprocesamiento]
@@ -38,14 +38,14 @@ flowchart TD
   A4A --> A4F[Retroalimentación]
   A4A --> A4G[Almacenamiento cifrado]
   
-  A4G --> A5[5. Evaluación Técnica e Impacto]
+  A4G --> A5[Evaluación Técnica e Impacto]
   A5 --> A5A[Simulación de impacto]
   A5A --> A5B[Reducción de tiempos: 335→180 días]
   A5A --> A5C[Disminución 65% errores humanos]
   A5A --> A5D[Ahorro 15.000 horas anuales]
   A5A --> A5E[ROI > 60% primer año]
   
-  A5E --> A6[6. Principios Normativos y Éticos]
+  A5E --> A6[Principios Normativos y Éticos]
   A6 --> A6A[Validación legal]
   A6A --> A6B[Ley 19.628 y 21.719]
   A6A --> A6C[Proyecto Ley 11144-07]
