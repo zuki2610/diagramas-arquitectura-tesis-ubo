@@ -61,9 +61,10 @@ flowchart TD
   classDef start fill:#e8f5e8,stroke:#2e7d32,stroke-width:3px
   classDef stage fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
   classDef sub fill:#fff3e0,stroke:#f57c00,stroke-width:2px
-  classDef end fill:#f3e5f5,stroke:#7b1fa2,stroke-width:3px
+  classDef final fill:#f3e5f5,stroke:#7b1fa2,stroke-width:3px
   
-  class START,END start
+  class START start
+  class END final
   class A1,A2,A3,A4,A5,A6 stage
   class A1A,A1B,A1C,A1D,A1E,A2A,A2B,A2C,A2D,A2E,A2F,A3A,A3B,A3C,A3D,A3E,A4A,A4B,A4C,A4D,A4E,A4F,A4G,A5A,A5B,A5C,A5D,A5E,A6A,A6B,A6C,A6D,A6E,A6F,A6G,A6H sub
 ``` 
